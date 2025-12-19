@@ -6,7 +6,9 @@ services:
     # Mount ONLY the target project - nothing else from host
     volumes:
       - ${PROJECT_PATH:-.}:/workspace
-      # Persist Claude settings/auth between runs
+      # Mount host Claude config read-only (skills, settings)
+      - ${HOME}/.claude:/home/coder/.claude-host:ro
+      # Persist Claude auth/state between runs (writable)
       - claude-config:/home/coder/.claude
       - claude-config-local:/home/coder/.config/claude
 

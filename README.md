@@ -12,16 +12,32 @@ source ~/.zshrc
 
 Then run `claude-sandbox` from any project directory.
 
+## Why Not the Official Claude Sandbox?
+
+Claude Code has a [built-in sandbox](https://code.claude.com/docs/en/sandboxing) using Bubblewrap (Linux) / Seatbelt (macOS). How does this compare?
+
+| | **Official Sandbox** | **This (Docker)** |
+|---|---|---|
+| Filesystem | Can READ entire host, writes limited to cwd | Complete isolation - only sees mounted project |
+| Network | Domain allowlist, prompts for each new domain | Full internet, no prompts |
+| Weight | Lightweight, native | Heavier, requires Docker |
+| Setup | Built-in (`/sandbox` command) | These scripts |
+
+**The key difference:** The official sandbox still lets Claude *read* your entire system - SSH keys, env files, other projects, browser data. It just limits *writes* to the current directory.
+
+This Docker approach gives true isolation. Claude literally cannot see anything outside the mounted project directory.
+
 ## What's Isolated
 - Claude can ONLY see `/workspace` (your mounted project)
 - No access to host filesystem, home directory, SSH keys, etc.
-- Auth tokens persist in Docker volumes between sessions
+- Your `~/.claude` config (skills, settings) is mounted read-only
 
 ## What's Allowed
 - Full read/write to mounted project
 - Internet access (for Claude API + web searches)
 - Install packages, run builds, etc. within container
 - Git commits (uses your host git config automatically)
+- Read access to your Claude skills and settings
 
 ## Usage
 
