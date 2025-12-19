@@ -27,6 +27,7 @@ services:
       - TERM=xterm-256color
       - HOME=/home/coder
       - CLAUDE_CONFIG_DIR=/claude
+      - DISABLE_AUTOUPDATER=1
 
     # Resource limits (optional, adjust as needed)
     deploy:
