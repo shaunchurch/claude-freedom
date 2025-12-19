@@ -99,6 +99,19 @@ Reset Claude auth/settings:
 ./cleanup.sh --full    # also remove docker image
 ```
 
+## Why Not Dev Containers?
+
+The [devcontainers CLI](https://github.com/devcontainers/cli) is a great standardized solution for containerized development. You could absolutely use it for this.
+
+However, devcontainers require per-project `.devcontainer/devcontainer.json` config - there's no global setup that works across all projects.
+
+This tool is intentionally simpler:
+- One shell alias, works on any project instantly
+- No per-project config files needed
+- Claude-specific quirks already solved (CLAUDE_CONFIG_DIR, bind mounts, etc.)
+
+If you prefer the devcontainers ecosystem or need its features (pre-built components, IDE integration), check out the [official Claude Code devcontainer docs](https://code.claude.com/docs/en/devcontainer).
+
 ## Customization
 
 Edit `Dockerfile` to add language-specific tools:
