@@ -30,14 +30,14 @@ This Docker approach gives true isolation. Claude literally cannot see anything 
 ## What's Isolated
 - Claude can ONLY see `/workspace` (your mounted project)
 - No access to host filesystem, home directory, SSH keys, etc.
-- Your `~/.claude` config (skills, settings) is mounted read-only
+- Your `~/.claude` skills/commands are available read-only
 
 ## What's Allowed
 - Full read/write to mounted project
 - Internet access (for Claude API + web searches)
 - Install packages, run builds, etc. within container
 - Git commits (uses your host git config automatically)
-- Read access to your Claude skills and settings
+- Read access to your Claude skills and commands
 
 ## Usage
 
@@ -65,7 +65,7 @@ Add to `~/.zshrc` or `~/.bashrc`:
 ```bash
 # Claude Code sandbox - run from any project directory
 claude-sandbox() {
-  /path/to/claude-freedom/sandbox.sh "$(pwd)" "$@"
+  ~/claude-freedom/sandbox.sh "$(pwd)" "$@"
 }
 ```
 
@@ -81,7 +81,7 @@ claude-sandbox --no-build   # skip docker rebuild
 ## First Run
 First run builds the image (~2-3 min). Subsequent runs are fast.
 
-If using OAuth, authenticate on first run - creds persist in Docker volume.
+Login once on first run - credentials persist at `~/.config/claude-sandbox/`.
 
 ## Multiple Projects
 You can run multiple sandboxes simultaneously - each gets a unique container.
@@ -91,10 +91,10 @@ Your host's `git config --global user.name` and `user.email` are automatically p
 
 ## Cleanup
 
-Reset Claude auth/settings (useful if auth breaks):
+Reset Claude auth/settings:
 
 ```bash
-./cleanup.sh           # removes config volumes (prompts for confirmation)
+./cleanup.sh           # removes config (prompts for confirmation)
 ./cleanup.sh --force   # skip confirmation
 ./cleanup.sh --full    # also remove docker image
 ```

@@ -4,7 +4,6 @@
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FULL=false
 FORCE=false
 
@@ -15,12 +14,13 @@ for arg in "$@"; do
   esac
 done
 
+CONFIG_DIR="${CLAUDE_SANDBOX_CONFIG:-$HOME/.config/claude-sandbox}"
+
 echo "Claude Sandbox Cleanup"
 echo "======================"
 echo ""
 echo "Will delete:"
-echo "  - Docker volume: claude-freedom_claude-config"
-echo "  - Docker volume: claude-freedom_claude-config-local"
+echo "  - Config directory: $CONFIG_DIR"
 if $FULL; then
   echo "  - Docker image: claude-sandbox"
 fi
@@ -35,8 +35,8 @@ if ! $FORCE; then
   fi
 fi
 
-echo "Removing volumes..."
-docker volume rm claude-freedom_claude-config claude-freedom_claude-config-local 2>/dev/null || echo "  (volumes not found or already removed)"
+echo "Removing config directory..."
+rm -rf "$CONFIG_DIR"
 
 if $FULL; then
   echo "Removing image..."

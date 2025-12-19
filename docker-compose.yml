@@ -6,11 +6,10 @@ services:
     # Mount ONLY the target project - nothing else from host
     volumes:
       - ${PROJECT_PATH:-.}:/workspace
-      # Mount host Claude config read-only (skills, settings)
-      - ${HOME}/.claude:/home/coder/.claude-host:ro
-      # Persist Claude auth/state between runs (writable)
-      - claude-config:/home/coder/.claude
-      - claude-config-local:/home/coder/.config/claude
+      # Persist Claude config via bind mount to host (not named volume!)
+      - ${CLAUDE_SANDBOX_CONFIG}:/claude
+      # Mount host Claude config read-only for skills/commands
+      - ${HOME}/.claude:/host-claude:ro
 
     # Full internet access (required for Claude API)
     network_mode: bridge
@@ -25,6 +24,8 @@ services:
       - GIT_USER_NAME=${GIT_USER_NAME:-}
       - GIT_USER_EMAIL=${GIT_USER_EMAIL:-}
       - TERM=xterm-256color
+      - HOME=/home/coder
+      - CLAUDE_CONFIG_DIR=/claude
 
     # Resource limits (optional, adjust as needed)
     deploy:
@@ -33,6 +34,3 @@ services:
           memory: 4G
           cpus: '4'
 
-volumes:
-  claude-config:
-  claude-config-local:

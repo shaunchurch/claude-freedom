@@ -56,6 +56,10 @@ echo "Starting Claude sandbox for: $PROJECT_PATH"
 GIT_USER_NAME=$(git config --global user.name 2>/dev/null || echo "")
 GIT_USER_EMAIL=$(git config --global user.email 2>/dev/null || echo "")
 
+# Ensure config directory exists on host
+export CLAUDE_SANDBOX_CONFIG="${CLAUDE_SANDBOX_CONFIG:-$HOME/.config/claude-sandbox}"
+mkdir -p "$CLAUDE_SANDBOX_CONFIG"
+
 # Compose command with consistent project name
 COMPOSE="docker compose -p claude-freedom -f $SCRIPT_DIR/docker-compose.yml"
 
