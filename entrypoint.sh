@@ -17,5 +17,17 @@ if [ -d "/host-claude/commands" ] && [ ! -e "/claude/commands" ]; then
   ln -s /host-claude/commands /claude/commands
 fi
 
+# Create settings with sandbox status line if not exists
+if [ ! -f "/claude/settings.json" ]; then
+  cat > /claude/settings.json << SETTINGS
+{
+  "statusLine": {
+    "type": "command",
+    "command": "/usr/local/bin/statusline.sh"
+  }
+}
+SETTINGS
+fi
+
 # Launch claude (CLAUDE_CONFIG_DIR env var tells it where to store config)
 exec claude "$@"

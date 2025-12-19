@@ -68,8 +68,12 @@ if ! $NO_BUILD; then
   $COMPOSE build --quiet
 fi
 
+# Extract project name from path
+PROJECT_NAME=$(basename "$PROJECT_PATH")
+
 # Run Claude with remaining args
 PROJECT_PATH="$PROJECT_PATH" \
+PROJECT_NAME="$PROJECT_NAME" \
 GIT_USER_NAME="$GIT_USER_NAME" \
 GIT_USER_EMAIL="$GIT_USER_EMAIL" \
 $COMPOSE run --rm claude-sandbox "${CLAUDE_ARGS[@]}"

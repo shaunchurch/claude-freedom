@@ -29,8 +29,9 @@ RUN mkdir -p /home/coder/.claude /home/coder/.config/claude && \
 WORKDIR /workspace
 RUN chown coder:coder /workspace
 
-# Add entrypoint script
+# Add scripts
 COPY --chmod=755 entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chmod=755 statusline.sh /usr/local/bin/statusline.sh
 
 USER coder
 

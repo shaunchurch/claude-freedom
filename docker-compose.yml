@@ -23,6 +23,7 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - GIT_USER_NAME=${GIT_USER_NAME:-}
       - GIT_USER_EMAIL=${GIT_USER_EMAIL:-}
+      - PROJECT_NAME=${PROJECT_NAME:-sandbox}
       - TERM=xterm-256color
       - HOME=/home/coder
       - CLAUDE_CONFIG_DIR=/claude
