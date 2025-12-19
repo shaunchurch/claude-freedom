@@ -5,7 +5,7 @@ Run Claude Code in Docker with full project access but isolated from host system
 ## Quick Install
 
 ```bash
-git clone https://github.com/youruser/claude-freedom ~/claude-freedom && \
+git clone https://github.com/shaunchurch/claude-freedom ~/claude-freedom && \
 echo 'claude-sandbox() { ~/claude-freedom/sandbox.sh "$(pwd)" "$@"; }' >> ~/.zshrc && \
 source ~/.zshrc
 ```
