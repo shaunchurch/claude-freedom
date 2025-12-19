@@ -56,13 +56,16 @@ echo "Starting Claude sandbox for: $PROJECT_PATH"
 GIT_USER_NAME=$(git config --global user.name 2>/dev/null || echo "")
 GIT_USER_EMAIL=$(git config --global user.email 2>/dev/null || echo "")
 
+# Compose command with consistent project name
+COMPOSE="docker compose -p claude-freedom -f $SCRIPT_DIR/docker-compose.yml"
+
 # Build if needed (fast if cached)
 if ! $NO_BUILD; then
-  docker compose -f "$SCRIPT_DIR/docker-compose.yml" build --quiet
+  $COMPOSE build --quiet
 fi
 
 # Run Claude with remaining args
 PROJECT_PATH="$PROJECT_PATH" \
 GIT_USER_NAME="$GIT_USER_NAME" \
 GIT_USER_EMAIL="$GIT_USER_EMAIL" \
-docker compose -f "$SCRIPT_DIR/docker-compose.yml" run --rm claude-sandbox "${CLAUDE_ARGS[@]}"
+$COMPOSE run --rm claude-sandbox "${CLAUDE_ARGS[@]}"

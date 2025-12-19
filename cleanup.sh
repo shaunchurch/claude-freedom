@@ -36,7 +36,7 @@ if ! $FORCE; then
 fi
 
 echo "Removing volumes..."
-docker volume rm claude-freedom_claude-config claude-freedom_claude-config-local 2>/dev/null || true
+docker volume rm claude-freedom_claude-config claude-freedom_claude-config-local 2>/dev/null || echo "  (volumes not found or already removed)"
 
 if $FULL; then
   echo "Removing image..."
