@@ -15,12 +15,17 @@ fi
 # Parse arguments
 PROJECT_PATH=""
 NO_BUILD=false
+SKIP_UPDATE_CHECK=false
 CLAUDE_ARGS=()
 
 while [[ $# -gt 0 ]]; do
   case $1 in
     --no-build)
       NO_BUILD=true
+      shift
+      ;;
+    --skip-update-check)
+      SKIP_UPDATE_CHECK=true
       shift
       ;;
     -*)
@@ -63,10 +68,38 @@ mkdir -p "$CLAUDE_SANDBOX_CONFIG"
 # Compose command with consistent project name
 COMPOSE="docker compose -p claude-freedom -f $SCRIPT_DIR/docker-compose.yml"
 
-# Build if needed (fast if cached)
-if ! $NO_BUILD; then
+# Check for Claude Code updates (quick npm check)
+check_update() {
+  if $SKIP_UPDATE_CHECK || $NO_BUILD; then
+    # Skip update check, just do normal build if needed
+    if ! $NO_BUILD; then
+      $COMPOSE build --quiet
+    fi
+    return
+  fi
+
+  # Get installed version from container (if image exists)
+  local installed=$(docker run --rm claude-sandbox claude --version 2>/dev/null | head -1 || echo "0.0.0")
+  # Get latest version from npm
+  local latest=$(npm view @anthropic-ai/claude-code version 2>/dev/null || echo "0.0.0")
+
+  if [ "$installed" != "$latest" ] && [ "$latest" != "0.0.0" ] && [ "$installed" != "0.0.0" ]; then
+    echo ""
+    echo "Claude Code update available: $installed → $latest"
+    read -p "Update now? [y/N] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      echo "Rebuilding with latest Claude Code..."
+      $COMPOSE build --no-cache --quiet
+      return
+    fi
+  fi
+
+  # Normal build (fast if cached)
   $COMPOSE build --quiet
-fi
+}
+
+check_update
 
 # Extract project name from path
 PROJECT_NAME=$(basename "$PROJECT_PATH")
